@@ -9,6 +9,7 @@ BOOL CALLBACK DlgProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam);
 //Процедура окна - это самая обычная функция, которая неявно вызывается при запуске окна.
 
 BOOL CALLBACK DlgProcAdd(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam);
+BOOL CALLBACK DlgProcEdit(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam);
 
 INT WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInst, LPSTR lpCmdLine, INT nCmdShow)
 {
@@ -31,6 +32,10 @@ BOOL CALLBACK DlgProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 	{
 		switch (LOWORD(wParam))
 		{
+		case IDC_LIST_BOX:
+			if(HIWORD(wParam)==LBN_DBLCLK)
+				DialogBoxParam(GetModuleHandle(NULL), MAKEINTRESOURCE(IDD_DIALOG_ADD), hwnd, (DLGPROC)DlgProcEdit, 0);
+			break;
 		case IDC_BUTTON_ADD:
 			DialogBoxParam(GetModuleHandle(NULL), MAKEINTRESOURCE(IDD_DIALOG_ADD), hwnd, (DLGPROC)DlgProcAdd, 0);
 			break;
@@ -87,6 +92,30 @@ BOOL CALLBACK DlgProcAdd(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 		}
 	}
 	break;
+	case WM_CLOSE:EndDialog(hwnd, 0);
+	}
+	return FALSE;
+}
+
+BOOL CALLBACK DlgProcEdit(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
+{
+	CHAR sz_buffer[256] = {};
+	HWND hEdit = GetDlgItem(hwnd, IDC_EDIT_ELEMENT);
+	HWND hParent = GetParent(hwnd);
+	HWND hListBox = GetDlgItem(hParent, IDC_LIST_BOX);
+	switch (uMsg)
+	{
+	case WM_INITDIALOG:
+	{
+		SendMessage(hwnd, WM_SETTEXT, 0, (LPARAM)"Изменение элемента");
+		INT i = SendMessage(hListBox, LB_GETCURSEL, 0, 0);
+		SendMessage(hListBox, LB_GETTEXT, i, (LPARAM)sz_buffer);
+		MessageBox(hwnd, sz_buffer, "Info", MB_OK);
+		SendMessage(hEdit, WM_SETTEXT, 0, (LPARAM)sz_buffer);
+	}
+		break;
+	case WM_COMMAND:
+		break;
 	case WM_CLOSE:EndDialog(hwnd, 0);
 	}
 	return FALSE;
