@@ -36,6 +36,12 @@ BOOL CALLBACK DlgProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 			if(HIWORD(wParam)==LBN_DBLCLK)
 				DialogBoxParam(GetModuleHandle(NULL), MAKEINTRESOURCE(IDD_DIALOG_ADD), hwnd, (DLGPROC)DlgProcEdit, 0);
 			break;
+		case IDC_BUTTON_DELETE:
+		{
+			INT i = SendMessage(GetDlgItem(hwnd, IDC_LIST_BOX), LB_GETCURSEL, 0, 0);
+			SendMessage(GetDlgItem(hwnd, IDC_LIST_BOX), LB_DELETESTRING, i, 0);
+		}
+		break;
 		case IDC_BUTTON_ADD:
 			DialogBoxParam(GetModuleHandle(NULL), MAKEINTRESOURCE(IDD_DIALOG_ADD), hwnd, (DLGPROC)DlgProcAdd, 0);
 			break;
@@ -115,7 +121,20 @@ BOOL CALLBACK DlgProcEdit(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 	}
 		break;
 	case WM_COMMAND:
-		break;
+	{
+		switch (LOWORD(wParam))
+		{
+		case IDOK:
+		{
+			SendMessage(hEdit, WM_GETTEXT, 256, (LPARAM)sz_buffer);
+			INT i = SendMessage(hListBox, LB_GETCURSEL, 0, 0);
+			SendMessage(hListBox, LB_DELETESTRING, i, 0);
+			SendMessage(hListBox, LB_INSERTSTRING, i, (LPARAM)sz_buffer);
+		}
+		case IDCANCEL: EndDialog(hwnd, 0);
+		}
+	}
+	break;
 	case WM_CLOSE:EndDialog(hwnd, 0);
 	}
 	return FALSE;
