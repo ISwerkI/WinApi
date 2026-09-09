@@ -19,6 +19,7 @@ INT WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInst, LPSTR lpCmdLine, IN
 
 BOOL CALLBACK DlgProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 {
+
 	switch (uMsg)
 	{
 	case WM_INITDIALOG:
@@ -26,23 +27,28 @@ BOOL CALLBACK DlgProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 		HWND hListBox = GetDlgItem(hwnd, IDC_LIST_BOX);
 		for (int i = 0; i < sizeof(g_sz_VALUES) / sizeof(g_sz_VALUES[0]);i++)
 			SendMessage(hListBox, LB_ADDSTRING, 0, (LPARAM)g_sz_VALUES[i]);
+
 	}
-		break;
+	break;
 	case WM_COMMAND:
 	{
+		HWND hListBox = GetDlgItem(hwnd, IDC_LIST_BOX);
 		switch (LOWORD(wParam))
 		{
 		case IDC_LIST_BOX:
-			if(HIWORD(wParam)==LBN_DBLCLK)
+			if (HIWORD(wParam) == LBN_DBLCLK)
 				DialogBoxParam(GetModuleHandle(NULL), MAKEINTRESOURCE(IDD_DIALOG_ADD), hwnd, (DLGPROC)DlgProcEdit, 0);
 			break;
 		case IDC_BUTTON_ADD:
 			DialogBoxParam(GetModuleHandle(NULL), MAKEINTRESOURCE(IDD_DIALOG_ADD), hwnd, (DLGPROC)DlgProcAdd, 0);
 			break;
-			
-		case IDOK: 
+		case IDC_BUTTON_DELETE:
+			SendMessage(hListBox, LB_DELETESTRING, SendMessage(hListBox, LB_GETCURSEL, 0, 0), 0);
+			break;
+
+		case IDOK:
 		{
-			HWND hListBox = GetDlgItem(hwnd, IDC_LIST_BOX);
+
 			INT i = SendMessage(hListBox, LB_GETCURSEL, 0, 0);
 			CHAR sz_buffer[256] = {};
 			SendMessage(hListBox, LB_GETTEXT, i, (WPARAM)sz_buffer);
@@ -50,11 +56,11 @@ BOOL CALLBACK DlgProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 			sprintf(sz_message, "Вы выбрали вариант №%i со значением '%s'.", i, sz_buffer);
 			MessageBox(hwnd, sz_message, "Выбранный элемент", MB_OK | MB_ICONINFORMATION);
 		}
-			break;
+		break;
 		case IDCANCEL: EndDialog(hwnd, 0);
 		}
 	}
-		break;
+	break;
 	case WM_CLOSE:
 		EndDialog(hwnd, 0);
 	}
@@ -77,10 +83,10 @@ BOOL CALLBACK DlgProcAdd(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 			CHAR sz_buffer[256] = {};
 			HWND hEditElement = GetDlgItem(hwnd, IDC_EDIT_ELEMENT);
 			SendMessage(hEditElement, WM_GETTEXT, 256, (LPARAM)sz_buffer);
-			
+
 			HWND hParent = GetParent(hwnd);
 			HWND hListBox = GetDlgItem(hParent, IDC_LIST_BOX);
-			if (SendMessage(hListBox, LB_FINDSTRINGEXACT, -1, (LPARAM)sz_buffer)==LB_ERR)
+			if (SendMessage(hListBox, LB_FINDSTRINGEXACT, -1, (LPARAM)sz_buffer) == LB_ERR)
 				SendMessage(hListBox, LB_ADDSTRING, 0, (LPARAM)sz_buffer);
 			else
 			{
