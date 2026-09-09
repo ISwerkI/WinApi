@@ -114,9 +114,25 @@ BOOL CALLBACK DlgProcEdit(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 		SendMessage(hEdit, WM_SETTEXT, 0, (LPARAM)sz_buffer);
 		DWORD dwError = GetLastError();
 		SetFocus(hEdit);
+		DWORD start = 0;
+		DWORD n = SendMessage(hEdit, EM_LINELENGTH, -1, 0);
+		SendMessage(hEdit, EM_SETSEL, (WPARAM)&n, (LPARAM)&n);
+
 	}
-		break;
+	break;
 	case WM_COMMAND:
+		switch (LOWORD(wParam))
+		{
+		case IDOK:
+		{
+			SendMessage(hEdit, WM_GETTEXT, 256, (LPARAM)sz_buffer);
+			INT i = SendMessage(hListBox, LB_GETCURSEL, 0, 0);
+			SendMessage(hListBox, LB_DELETESTRING, i, 0);
+			SendMessage(hListBox, LB_INSERTSTRING, i, (LPARAM)sz_buffer);
+		}
+		case IDCANCEL:EndDialog(hwnd, 0);
+		}
+
 		break;
 	case WM_CLOSE:EndDialog(hwnd, 0);
 	}
