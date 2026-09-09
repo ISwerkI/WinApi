@@ -112,6 +112,8 @@ BOOL CALLBACK DlgProcEdit(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 		SendMessage(hListBox, LB_GETTEXT, i, (LPARAM)sz_buffer);
 		MessageBox(hwnd, sz_buffer, "Info", MB_OK);
 		SendMessage(hEdit, WM_SETTEXT, 0, (LPARAM)sz_buffer);
+		DWORD dwError = GetLastError();
+		SetFocus(hEdit);
 	}
 		break;
 	case WM_COMMAND:
