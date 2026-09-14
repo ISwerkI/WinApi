@@ -1,4 +1,4 @@
-#include<Windows.h>
+﻿#include<Windows.h>
 
 CONST CHAR g_szMyWindowClass[] = "My Window Class";
 INT CALLBACK WndProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam);
@@ -95,8 +95,64 @@ INT CALLBACK WndProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 	switch (uMsg)
 	{
 	case WM_CREATE:
+	{
+		HWND hStatic = CreateWindowEx
+		(
+			NULL,
+			"Static",
+			"Этот static был создан при помощи функции CreateWindow()",
+			WS_CHILD | WS_VISIBLE,
+			10,10,
+			500,25,
+			hwnd,
+			(HMENU)1000,
+			GetModuleHandle(NULL),	//hInstance
+			NULL
+		);
+		HWND hEdit = CreateWindowEx
+		(
+			NULL,
+			"Edit",
+			"Это текстовое поле создано при помощи функции CreateWindowEx()",
+			WS_CHILD | WS_VISIBLE | WS_BORDER,
+			10,35,
+			500, 25,
+			hwnd,
+			(HMENU)1001,
+			GetModuleHandle(NULL),
+			NULL
+		);
+		HWND hButton = CreateWindowEx
+		(
+			NULL,
+			"Button",
+			"Применить",
+			WS_CHILD | WS_VISIBLE | BS_PUSHBUTTON,
+			410, 67,
+			100,32,
+			hwnd,
+			(HMENU)1002,
+			GetModuleHandle(NULL),
+			NULL
+		);
+	}
 			break;
 	case WM_COMMAND:
+	{
+		switch (LOWORD(wParam))
+		{
+		case 1002:
+		{
+			CHAR sz_buffer[256] = {};
+			HWND hStatic = GetDlgItem(hwnd, 1000);
+			HWND hEdit = GetDlgItem(hwnd, 1001);
+			SendMessage(hEdit, WM_GETTEXT, 256, (LPARAM)sz_buffer);
+			SendMessage(hStatic, WM_SETTEXT, 0, (LPARAM)sz_buffer);
+			//SendMessage(hwnd, WM_SETTEXT, 0, (LPARAM)sz_buffer);
+		}
+		}
+
+	}
 			break;
 	case WM_DESTROY:PostQuitMessage(0);		break;
 	case WM_CLOSE:	DestroyWindow(hwnd);	break;
