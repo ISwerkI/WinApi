@@ -36,7 +36,15 @@ INT WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInst, LPSTR lpCmdLine, IN
 		LR_LOADFROMFILE
 	);
 
-	wClass.hCursor = LoadCursor(NULL, IDC_ARROW);
+	wClass.hCursor = (HCURSOR)LoadImage
+	(
+		hInstance, 
+		"starcraft-original\\Working In Background.ani",
+		IMAGE_CURSOR,
+		32, 32,
+		LR_LOADFROMFILE
+		);
+	//wClass.hCursor = LoadCursor(NULL, IDC_ARROW);
 	wClass.hbrBackground = (HBRUSH)COLOR_WINDOW;
 
 	wClass.lpszClassName = g_szMyWindowClass;
