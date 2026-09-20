@@ -13,6 +13,7 @@ INT WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInst, LPSTR lpCmdLine, IN
 	wClass.cbClsExtra = 0;
 	wClass.cbWndExtra = 0;
 
+
 	//wClass.hIcon = LoadIcon(NULL,IDI_APPLICATION);
 	//wClass.hIcon = LoadIcon(NULL,IDI_APPLICATION);
 	wClass.hIcon = (HICON)LoadImage
@@ -58,6 +59,13 @@ INT WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInst, LPSTR lpCmdLine, IN
 		return 0;
 	}
 
+	int screen_width = GetSystemMetrics(SM_CXSCREEN);
+	int screen_height = GetSystemMetrics(SM_CYSCREEN);
+	int window_width = screen_width * 3 / 4;
+	int window_height = screen_height * 3 / 4;
+	int window_start_x = screen_width * 1 / 8;
+	int window_start_y = screen_height * 1 / 8;
+
 	//2) Создание окна;
 	HWND hwnd = CreateWindowEx
 	(
@@ -65,8 +73,8 @@ INT WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInst, LPSTR lpCmdLine, IN
 		g_szMyWindowClass,	//Class name
 		g_szMyWindowClass,	//Window title
 		WS_OVERLAPPEDWINDOW,//Window stytle
-		CW_USEDEFAULT,CW_USEDEFAULT,	//Position
-		CW_USEDEFAULT,CW_USEDEFAULT	,	//Window size
+		window_start_x, window_start_y,	//Position
+		window_width, window_height,	//Window size
 		NULL,
 		NULL,
 		hInstance,
