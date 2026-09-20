@@ -2,6 +2,10 @@
 #include<Windows.h>
 #include<cstdio>
 
+#define IDC_STATIC 1000
+#define IDC_EDIT 1001
+#define IDC_BUTTON 1002
+
 CONST CHAR g_szMyWindowClass[] = "My Window Class";
 INT CALLBACK WndProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam);
 
