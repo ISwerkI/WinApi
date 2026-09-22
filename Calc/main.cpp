@@ -45,9 +45,9 @@ INT WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInst, LPSTR lpCmdLine, IN
 		NULL,
 		g_szClassName,
 		g_szClassName,
-		WS_OVERLAPPEDWINDOW,
+		WS_OVERLAPPED | WS_CAPTION | WS_SYSMENU | WS_MINIMIZEBOX ,		//просто убрали WS_THICKFRAME грубо говоря (это рамки)
 		CW_USEDEFAULT, CW_USEDEFAULT,
-		CW_USEDEFAULT, CW_USEDEFAULT,
+		WINDOW_SIZE_X, WINDOW_SIZE_Y,
 		NULL,
 		NULL,
 		hInstance,
