@@ -198,12 +198,20 @@ INT CALLBACK WndProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 		CHAR sz_display[256] = {};
 		CHAR sz_digit[2] = {};
 		HWND hEditDisplay = GetDlgItem(hwnd, IDC_EDIT_DISPLAY);
-		if (LOWORD(wParam) >= IDC_BUTTON_0 && LOWORD(wParam) <= IDC_BUTTON_9)
+		if (LOWORD(wParam) >= IDC_BUTTON_0 && LOWORD(wParam) <= IDC_BUTTON_POINT)
 		{
 			SendMessage(hEditDisplay, WM_GETTEXT, 256, (LPARAM)sz_display);
-			sz_digit[0] = LOWORD(wParam) - IDC_BUTTON_0 + 48;
-			if (strcmp(sz_display, "0") == 0)strcpy(sz_display, sz_digit);
-			else strcat(sz_display, sz_digit);
+			if (LOWORD(wParam) == IDC_BUTTON_POINT)
+			{
+				if (strchr(sz_display, '.'))break;
+				strcat(sz_display, ".");
+			}
+			else
+			{
+				sz_digit[0] = LOWORD(wParam) - IDC_BUTTON_0 + 48;
+				if (strcmp(sz_display, "0") == 0)strcpy(sz_display, sz_digit);
+				else strcat(sz_display, sz_digit);
+			}
 			SendMessage(hEditDisplay, WM_SETTEXT, 0, (LPARAM)sz_display);
 		}
 	}
