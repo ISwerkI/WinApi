@@ -147,7 +147,7 @@ INT CALLBACK WndProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 				BUTTON_SHIFT_X(3),BUTTON_SHIFT_Y(i),
 				g_i_BUTTON_SIZE,g_i_BUTTON_SIZE,
 				hwnd,
-				(HMENU)(IDC_BUTTON_PLUS + i),
+				(HMENU)(IDC_BUTTON_PLUS + 3 - i),
 				GetModuleHandle(NULL),
 				0
 			);
@@ -215,7 +215,33 @@ INT CALLBACK WndProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 			SendMessage(hEditDisplay, WM_SETTEXT, 0, (LPARAM)sz_display);
 		}
 	}
-		 break;
+	break;
+	case WM_KEYDOWN:
+	{
+		if (GetKeyState(VK_SHIFT) < 0 && wParam == 0x38)
+		{
+			if (wParam == 0x38)SendMessage(GetDlgItem(hwnd, IDC_BUTTON_ASTER), BM_SETSTATE, TRUE, 0); break;
+		}
+		else if (wParam >= '0' && wParam <= '9')
+			SendMessage(GetDlgItem(hwnd, wParam - '0' + IDC_BUTTON_0), BM_SETSTATE, TRUE, 0);
+		else if(wParam >= 0x60 && wParam <=0x69)
+			SendMessage(GetDlgItem(hwnd, wParam - 0x60 + IDC_BUTTON_0), BM_SETSTATE, TRUE, 0);
+		switch (wParam)
+		{
+		case VK_OEM_PLUS:
+		case VK_ADD:SendMessage(GetDlgItem(hwnd, IDC_BUTTON_PLUS), BM_SETSTATE, TRUE, 0); break;
+		case VK_OEM_MINUS:
+		case VK_SUBTRACT:SendMessage(GetDlgItem(hwnd, IDC_BUTTON_MINUS), BM_SETSTATE, TRUE, 0); break;
+		case VK_OEM_PERIOD:SendMessage(GetDlgItem(hwnd, IDC_BUTTON_POINT), BM_SETSTATE, TRUE, 0); break;
+		case VK_MULTIPLY:
+			SendMessage(GetDlgItem(hwnd, IDC_BUTTON_ASTER), BM_SETSTATE, TRUE, 0); break;
+		case VK_BACK: SendMessage(GetDlgItem(hwnd, IDC_BUTTON_BSP), BM_SETSTATE, TRUE, 0); break;
+		case VK_ESCAPE: SendMessage(GetDlgItem(hwnd, IDC_BUTTON_CLR), BM_SETSTATE, TRUE, 0); break;
+		case VK_RETURN: SendMessage(GetDlgItem(hwnd, IDC_BUTTON_EQUAL), BM_SETSTATE, TRUE, 0); break;
+		case VK_OEM_2: SendMessage(GetDlgItem(hwnd, IDC_BUTTON_SLASH), BM_SETSTATE, TRUE, 0); break;
+		}
+	}
+	break;
 	case WM_DESTROY:
 		PostQuitMessage(0);
 		break;
