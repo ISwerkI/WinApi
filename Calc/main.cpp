@@ -240,7 +240,13 @@ INT CALLBACK WndProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 		{
 			ZeroMemory(sz_digit, sizeof(sz_digit));
 			ZeroMemory(sz_display, sizeof(sz_display));
+			a = DBL_MIN;
+			b = DBL_MIN;
+			operation = 0;
+			input = FALSE;
+			input_operation = FALSE;
 			SendMessage(hEditDisplay, WM_SETTEXT, 0, (LPARAM)"0");
+
 		}
 		if (LOWORD(wParam) >= IDC_BUTTON_PLUS && LOWORD(wParam) <= IDC_BUTTON_SLASH)
 		{
@@ -248,6 +254,7 @@ INT CALLBACK WndProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 			if (a == DBL_MIN)a = atof(sz_display);
 			else if (input) b = atof(sz_display);
 			input = FALSE;
+			SendMessage(hwnd, WM_COMMAND, LOWORD(IDC_BUTTON_EQUAL), 0);
 			operation = LOWORD(wParam);
 			input_operation = TRUE;
 		}
