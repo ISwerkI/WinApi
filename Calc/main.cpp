@@ -1,5 +1,7 @@
 #define _CRT_SECURE_NO_WARNINGS
 #include <Windows.h>
+#include <float.h>
+#include<cstdio>
 #include "resource.h"
 #include "dimentions.h"
 
@@ -195,11 +197,23 @@ INT CALLBACK WndProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 		break;
 	case WM_COMMAND:
 	{
+		static DOUBLE a = DBL_MIN;
+		static DOUBLE b = DBL_MIN;
+		static INT operation = 0;
+		static BOOL input = FALSE;
+		static BOOL input_operation = FALSE;
+
 		CHAR sz_display[256] = {};
 		CHAR sz_digit[2] = {};
 		HWND hEditDisplay = GetDlgItem(hwnd, IDC_EDIT_DISPLAY);
 		if (LOWORD(wParam) >= IDC_BUTTON_0 && LOWORD(wParam) <= IDC_BUTTON_POINT)
 		{
+			if (input_operation)
+			{
+				SendMessage(hEditDisplay, WM_SETTEXT,0, (LPARAM)"");
+				input_operation = FALSE;
+				input = TRUE;
+			}
 			SendMessage(hEditDisplay, WM_GETTEXT, 256, (LPARAM)sz_display);
 			if (LOWORD(wParam) == IDC_BUTTON_POINT)
 			{
@@ -227,6 +241,32 @@ INT CALLBACK WndProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 			ZeroMemory(sz_digit, sizeof(sz_digit));
 			ZeroMemory(sz_display, sizeof(sz_display));
 			SendMessage(hEditDisplay, WM_SETTEXT, 0, (LPARAM)"0");
+		}
+		if (LOWORD(wParam) >= IDC_BUTTON_PLUS && LOWORD(wParam) <= IDC_BUTTON_SLASH)
+		{
+			SendMessage(hEditDisplay, WM_GETTEXT, 256, (LPARAM)sz_display);
+			if (a == DBL_MIN)a = atof(sz_display);
+			else b = atof(sz_display);
+			input = FALSE;
+			operation = LOWORD(wParam);
+			input_operation = TRUE;
+		}
+		if (LOWORD(wParam) == IDC_BUTTON_EQUAL)
+		{
+			SendMessage(hEditDisplay, WM_GETTEXT, 256, (LPARAM)sz_display);
+			if (a == DBL_MIN)a = atof(sz_display);
+			else b = atof(sz_display);
+			input = FALSE;
+			switch (operation)
+			{
+			case IDC_BUTTON_PLUS:	a += b;	break;
+			case IDC_BUTTON_MINUS:	a -= b;	break;
+			case IDC_BUTTON_ASTER:	a *= b; break;
+			case IDC_BUTTON_SLASH:	a /= b;	break;
+			}
+			input_operation = FALSE;
+			sprintf(sz_display, "%g", a);
+			SendMessage(hEditDisplay, WM_SETTEXT, 0, (LPARAM)sz_display);
 		}
 	}
 	
