@@ -2,6 +2,7 @@
 #include <Windows.h>
 #include <float.h>
 #include<cstdio>
+#include<iostream>
 #include "resource.h"
 #include "dimentions.h"
 
@@ -80,6 +81,9 @@ INT CALLBACK WndProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 	{
 	case WM_CREATE:
 	{
+		AllocConsole();
+		freopen("CONOUT$", "w", stdout);
+		//https://stackoverflow.com/questions/15543571/allocconsole-not-displaying-cout
 		HWND hEdit = CreateWindowEx
 		(
 			NULL,
@@ -197,6 +201,7 @@ INT CALLBACK WndProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 		break;
 	case WM_COMMAND:
 	{
+		std::cout << LOWORD(wParam) << std::endl;
 		static DOUBLE a = DBL_MIN;
 		static DOUBLE b = DBL_MIN;
 		static INT operation = 0;
@@ -253,8 +258,8 @@ INT CALLBACK WndProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 			SendMessage(hEditDisplay, WM_GETTEXT, 256, (LPARAM)sz_display);
 			if (a == DBL_MIN)a = atof(sz_display);
 			else if (input) b = atof(sz_display);
+			if(input)SendMessage(hwnd, WM_COMMAND, LOWORD(IDC_BUTTON_EQUAL), 0);
 			input = FALSE;
-			SendMessage(hwnd, WM_COMMAND, LOWORD(IDC_BUTTON_EQUAL), 0);
 			operation = LOWORD(wParam);
 			input_operation = TRUE;
 		}
@@ -282,7 +287,10 @@ INT CALLBACK WndProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 	{
 		if (GetKeyState(VK_SHIFT) < 0 && wParam == 0x38)
 		{
-			if (wParam == 0x38)SendMessage(GetDlgItem(hwnd, IDC_BUTTON_ASTER), BM_SETSTATE, TRUE, 0); break;
+			//if (wParam == 0x38)
+				SendMessage(GetDlgItem(hwnd, IDC_BUTTON_ASTER), BM_SETSTATE, TRUE, 0);
+				SendMessage(hwnd, WM_COMMAND, LOWORD(IDC_BUTTON_ASTER), 0);
+			break;
 		}
 		else if (wParam >= '0' && wParam <= '9')
 			SendMessage(GetDlgItem(hwnd, wParam - '0' + IDC_BUTTON_0), BM_SETSTATE, TRUE, 0);
@@ -325,10 +333,6 @@ INT CALLBACK WndProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 		}
 		switch (wParam)
 		{
-		case VK_OEM_PLUS:
-		case VK_ADD:SendMessage(GetDlgItem(hwnd, IDC_BUTTON_PLUS), BM_SETSTATE, FALSE, 0); break;
-		case VK_OEM_MINUS:
-		case VK_SUBTRACT:SendMessage(GetDlgItem(hwnd, IDC_BUTTON_MINUS), BM_SETSTATE, FALSE, 0); break;
 		case VK_OEM_PERIOD: 
 			SendMessage(GetDlgItem(hwnd, IDC_BUTTON_POINT), BM_SETSTATE, FALSE, 0); 
 			SendMessage(hwnd, WM_COMMAND, LOWORD(IDC_BUTTON_POINT), 0); 
@@ -336,6 +340,14 @@ INT CALLBACK WndProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 		case VK_MULTIPLY:
 			SendMessage(GetDlgItem(hwnd, IDC_BUTTON_ASTER), BM_SETSTATE, FALSE, 0);
 			SendMessage(hwnd, WM_COMMAND, LOWORD(IDC_BUTTON_ASTER), 0); 
+			break;
+		case VK_OEM_PLUS:
+		case VK_ADD:SendMessage(GetDlgItem(hwnd, IDC_BUTTON_PLUS), BM_SETSTATE, FALSE, 0);
+			SendMessage(hwnd, WM_COMMAND, LOWORD(IDC_BUTTON_PLUS), 0);
+			break;
+		case VK_OEM_MINUS:
+		case VK_SUBTRACT:SendMessage(GetDlgItem(hwnd, IDC_BUTTON_MINUS), BM_SETSTATE, FALSE, 0); 
+			SendMessage(hwnd, WM_COMMAND, LOWORD(IDC_BUTTON_MINUS), 0);
 			break;
 		case VK_OEM_2:
 		case VK_DIVIDE:
@@ -349,7 +361,7 @@ INT CALLBACK WndProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 							SendMessage(hwnd, WM_COMMAND, LOWORD(IDC_BUTTON_CLR), 0); break;
 			break;
 		case VK_RETURN:		SendMessage(GetDlgItem(hwnd, IDC_BUTTON_EQUAL), BM_SETSTATE, FALSE, 0); 
-							SendMessage(hwnd, WM_COMMAND, LOWORD(IDC_BUTTON_EQUAL), 0); break;
+							SendMessage(hwnd, WM_COMMAND, LOWORD(IDC_BUTTON_EQUAL), 0); 
 			break;
 		}
 	}
