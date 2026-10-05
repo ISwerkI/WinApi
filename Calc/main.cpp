@@ -210,8 +210,23 @@ INT CALLBACK WndProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 			0
 		);
 
-	}
+	
 	SetSkin(hwnd, "square_blue");
+	HFONT hFront = CreateFont
+	(
+		48,16,
+		0,0,
+		500,
+		FALSE,FALSE,FALSE,
+		DEFAULT_CHARSET,
+		OUT_TT_PRECIS,
+		CLIP_CHARACTER_PRECIS,
+		ANTIALIASED_QUALITY,
+		DEFAULT_PITCH,
+		"Tahoma"
+	);
+	SendMessage(hEdit, WM_SETFONT, (WPARAM)hFront, TRUE);
+}
 		break;
 	case WM_COMMAND:
 	{
@@ -293,6 +308,7 @@ INT CALLBACK WndProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 			sprintf(sz_display, "%g", a);
 			SendMessage(hEditDisplay, WM_SETTEXT, 0, (LPARAM)sz_display);
 		}
+		SetFocus(hwnd);
 	}
 	
 	break;
