@@ -7,7 +7,7 @@
 
 #define IDR_SQUARE_BLUE					201
 #define IDR_METAL_MISTRAL				202
-
+#define IDR_MINECRAFT_BUTTONS			203
 #define IDR_EXIT						299
 
 ////////////////////////////////////////////

@@ -403,6 +403,7 @@ INT CALLBACK WndProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 		InsertMenu(hMenu, 0, MF_BYPOSITION | MF_STRING,IDR_EXIT, "Exit");
 		InsertMenu(hMenu, 0, MF_BYPOSITION | MF_STRING,IDR_SQUARE_BLUE, "Square blue");
 		InsertMenu(hMenu, 0, MF_BYPOSITION | MF_STRING,IDR_METAL_MISTRAL, "Metal mistral");
+		InsertMenu(hMenu, 0, MF_BYPOSITION | MF_STRING,IDR_MINECRAFT_BUTTONS, "Minecraft glif");
 
 		INT item = TrackPopupMenu(hMenu, TPM_BOTTOMALIGN | TPM_RETURNCMD | TPM_TOPALIGN | TPM_RETURNCMD | TPM_HORNEGANIMATION | TPM_VERPOSANIMATION,
 			LOWORD(lParam), HIWORD(lParam),
@@ -414,6 +415,7 @@ INT CALLBACK WndProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 		{
 		case IDR_METAL_MISTRAL: SetSkin(hwnd, "metal_mistral");		break;
 		case IDR_SQUARE_BLUE: SetSkin(hwnd, "square_blue");			break;
+		case IDR_MINECRAFT_BUTTONS: SetSkin(hwnd, "minecraft_buttons"); break;
 		case IDR_EXIT: SendMessage(hwnd, WM_CLOSE, 0, 0);			break;
 		}
 
