@@ -214,9 +214,10 @@ INT CALLBACK WndProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 
 	
 	SetSkin(hwnd, "square_blue");
+	AddFontResourceEx("Fonts\\digital-7 (mono).ttf", FR_PRIVATE, 0);
 	HFONT hFront = CreateFont
 	(
-		48,16,
+		g_i_FONT_HEIGHT,g_i_FONT_WIDTH,
 		0,0,
 		500,
 		FALSE,FALSE,FALSE,
@@ -225,7 +226,7 @@ INT CALLBACK WndProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 		CLIP_CHARACTER_PRECIS,
 		ANTIALIASED_QUALITY,
 		DEFAULT_PITCH,
-		"Tahoma"
+		"Digital-7 Mono"
 	);
 	SendMessage(hEdit, WM_SETFONT, (WPARAM)hFront, TRUE);
 }
