@@ -1,6 +1,6 @@
 #pragma once
 
-#define g_i_BUTTON_SIZE			50
+#define g_i_BUTTON_SIZE			128
 #define g_i_INTERVAL			10
 #define g_i_BUTTON_DOUBLE_SIZE	g_i_BUTTON_SIZE*2+g_i_INTERVAL
 #define g_i_DISPLAY_WIDTH		g_i_BUTTON_SIZE*5 + g_i_INTERVAL*4
