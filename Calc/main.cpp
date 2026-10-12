@@ -12,6 +12,7 @@ CONST CHAR g_szClassName[] = "Calc P_418";
 CONST CHAR* g_OPERATIONS[] = { "+","-","*","/" };
 INT CALLBACK WndProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam);
 VOID SetSkin(HWND hwnd, CONST CHAR sz_skin[]);
+VOID SetSkinFromDLL(HWND hwnd, CONST CHAR sz_skin[]);
 
 INT WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInst, LPSTR lpCmdLine, INT nCmdShow)
 {
@@ -213,7 +214,7 @@ INT CALLBACK WndProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 		);
 
 	
-	SetSkin(hwnd, "square_blue");
+	SetSkinFromDLL(hwnd, "square_blue.dll");
 	AddFontResourceEx("Fonts\\digital-7 (mono).ttf", FR_PRIVATE, 0);
 	HFONT hFront = CreateFont
 	(
@@ -437,7 +438,7 @@ INT CALLBACK WndProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 		case IDR_EXIT: SendMessage(hwnd, WM_CLOSE, 0, 0);			break;
 		}
 		index = item - IDR_SQUARE_BLUE;
-		SetSkin(hwnd, g_SKINS[index]);
+		SetSkinFromDLL(hwnd, g_SKINS[index]);
 		
 		HWND hEditDisplay = GetDlgItem(hwnd, IDC_EDIT_DISPLAY);
 		HDC hdcDisplay = GetDC(hEditDisplay);
@@ -497,4 +498,23 @@ VOID SetSkin(HWND hwnd, CONST CHAR sz_skin[])
 		SendMessage(GetDlgItem(hwnd, IDC_BUTTON_0 + i), BM_SETIMAGE, IMAGE_BITMAP, (LPARAM)hBitmap);
 		}
 	*/
+}
+
+VOID SetSkinFromDLL(HWND hwnd, CONST CHAR sz_skin[])
+{
+	HMODULE hSkin = LoadLibrary("square_blue");
+	for (int i = IDC_BUTTON_0; i <= IDC_BUTTON_EQUAL; i++)
+	{
+		HBITMAP bmpButton = (HBITMAP)LoadImage
+		(
+			hSkin,
+			MAKEINTRESOURCE(i),
+			IMAGE_BITMAP,
+			i>IDC_BUTTON_0?g_i_BUTTON_SIZE: g_i_BUTTON_DOUBLE_SIZE,
+			i<IDC_BUTTON_EQUAL?g_i_BUTTON_SIZE:g_i_BUTTON_DOUBLE_SIZE,
+			LR_SHARED
+		);
+		SendMessage(GetDlgItem(hwnd, i), BM_SETIMAGE, IMAGE_BITMAP, (LPARAM)bmpButton);
+	}
+	FreeLibrary(hSkin);
 }
